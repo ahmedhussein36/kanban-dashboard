@@ -1,0 +1,76 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Design homepage 1",
+      "description": "Create mockups for homepage",
+      "column": "done",
+      "order": 0
+    },
+    {
+      "id": "2",
+      "title": "Setup database 3",
+      "description": "Configure Postgres DB ",
+      "column": "in-progress"
+    },
+    {
+      "id": "3",
+      "title": "API integration",
+      "description": "Connect backend services for API",
+      "column": "backlog"
+    },
+    {
+      "id": "4",
+      "title": "Deploy to production",
+      "description": "Final release version",
+      "column": "backlog"
+    },
+    {
+      "id": "5",
+      "title": "Write unit tests 3",
+      "description": "Cover core modules with tests",
+      "column": "review",
+      "order": 2
+    },
+    {
+      "id": "6",
+      "title": "User feedback",
+      "description": "Collect and analyze user feedback",
+      "column": "backlog"
+    },
+    {
+      "id": "7",
+      "title": "Optimize performance ",
+      "description": "Improve load times and responsiveness",
+      "column": "in-progress"
+    },
+    {
+      "id": "8",
+      "title": "Update documentation",
+      "description": "Revise API docs for latest changes",
+      "column": "review",
+      "order": 2
+    },
+    {
+      "id": "9",
+      "title": "Fix bugs",
+      "description": "Resolve reported issues from QA",
+      "column": "done",
+      "order": 0
+    },
+    {
+      "id": "11",
+      "title": "Code review",
+      "description": "Review code submissions from team",
+      "column": "in-progress",
+      "order": 2
+    },
+    {
+      "id": "12",
+      "title": "Set up CI/CD",
+      "description": "Implement continuous integration and deployment",
+      "column": "review",
+      "order": 2
+    }
+  ]
+}
