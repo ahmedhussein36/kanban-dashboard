@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev ",
     "lint": "eslint .",
     "start": "next start",
     "json-server": "json-server --watch db.json --port 4000"

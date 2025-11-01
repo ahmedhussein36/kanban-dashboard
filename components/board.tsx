@@ -1,36 +1,34 @@
-"use client";
-
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import { Column } from "./column";
-import { COLUMNS, COLUMN_LABELS, type Task } from "@/types/task";
+import { COLUMNS, COLUMN_LABELS } from "@/types/task";
 import { useUpdateTask } from "@/hooks/useTasks";
-import { useQueryClient } from "@tanstack/react-query";
 
 export function Board() {
     const updateTask = useUpdateTask();
-    const queryClient = useQueryClient();
 
     const handleDragEnd = (result: DropResult) => {
         const { destination, source, draggableId } = result;
 
         if (!destination) return;
 
-        const taskId = Number(draggableId.split("-")[1]);
-        const newColumn = destination.droppableId as Task["column"];
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return;
+        }
 
-        queryClient.setQueryData(["tasks"], (oldData: any) => {
-            if (!oldData) return oldData;
-            return {
-                ...oldData,
-                pages: oldData.pages.map((page: Task[]) =>
-                    page.map((t) =>
-                        t.id === taskId ? { ...t, column: newColumn } : t
-                    )
-                ),
-            };
+        const taskId = Number.parseInt(draggableId.split("-")[1], 10);
+        const newColumn = destination.droppableId as
+            | "backlog"
+            | "in-progress"
+            | "review"
+            | "done";
+
+        updateTask.mutate({
+            id: taskId,
+            data: { column: newColumn },
         });
-
-        updateTask.mutate({ id: taskId, data: { column: newColumn } });
     };
 
     return (

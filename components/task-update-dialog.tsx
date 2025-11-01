@@ -24,7 +24,7 @@ import { Pencil } from "lucide-react";
 import { COLUMNS, COLUMN_LABELS } from "@/types/task";
 import type { Task, TaskColumn } from "@/types/task";
 import { useToast } from "@/hooks/use-toast";
-import { useUpdateTask } from "@/hooks/useUpdateTask";
+import { useUpdateTask } from "@/hooks/useTasks";
 
 export function TaskUpdateDialog({ task }: { task: Task }) {
     const [open, setOpen] = useState(false);
@@ -119,7 +119,11 @@ export function TaskUpdateDialog({ task }: { task: Task }) {
                         >
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdate} disabled={updateTask.isPending} className=" bg-teal-500 hover:bg-teal-600">
+                        <Button
+                            onClick={handleUpdate}
+                            disabled={updateTask.isPending}
+                            className=" bg-teal-500 hover:bg-teal-600"
+                        >
                             {updateTask.isPending
                                 ? "Updating..."
                                 : "Update Task"}

@@ -4,8 +4,7 @@
       "id": "1",
       "title": "Design homepage 1",
       "description": "Create mockups for homepage",
-      "column": "done",
-      "order": 0
+      "column": "done"
     },
     {
       "id": "2",
@@ -23,14 +22,13 @@
       "id": "4",
       "title": "Deploy to production",
       "description": "Final release version",
-      "column": "backlog"
+      "column": "in-progress"
     },
     {
       "id": "5",
       "title": "Write unit tests 3",
       "description": "Cover core modules with tests",
-      "column": "review",
-      "order": 2
+      "column": "review"
     },
     {
       "id": "6",
@@ -48,29 +46,25 @@
       "id": "8",
       "title": "Update documentation",
       "description": "Revise API docs for latest changes",
-      "column": "review",
-      "order": 2
+      "column": "done"
     },
     {
       "id": "9",
       "title": "Fix bugs",
       "description": "Resolve reported issues from QA",
-      "column": "done",
-      "order": 0
+      "column": "review"
+    },
+    {
+      "id": "10",
+      "title": "Code review 7",
+      "description": "Review code submissions from team",
+      "column": "review"
     },
     {
       "id": "11",
-      "title": "Code review",
-      "description": "Review code submissions from team",
-      "column": "in-progress",
-      "order": 2
-    },
-    {
-      "id": "12",
       "title": "Set up CI/CD",
       "description": "Implement continuous integration and deployment",
-      "column": "review",
-      "order": 2
+      "column": "backlog"
     }
   ]
 }

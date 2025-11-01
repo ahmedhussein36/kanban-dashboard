@@ -1,5 +1,4 @@
 import { Task } from "@/types/task";
-import { toast } from "sonner";
 
 const API_URL = process.env.API_URL || "http://localhost:4000/tasks";
 
@@ -11,14 +10,12 @@ export const apiClient = {
                 _page: String(page),
                 _limit: String(limit),
             });
-
             const response = await fetch(`${API_URL}?${params}`);
             if (!response.ok) throw new Error("Failed to fetch tasks");
-
             const tasks = await response.json();
             return tasks;
         } catch (error) {
-            console.log("Falling back to mock:", error);
+            console.log(error);
         }
     },
     async createTask(data: Omit<Task, "id" | "createdAt">) {
@@ -34,7 +31,6 @@ export const apiClient = {
             if (!res.ok) throw new Error("Failed to create task");
             return res.json();
         } catch (error) {
-            toast.error("Failed to create task");
             console.log(error);
         }
     },
@@ -49,7 +45,6 @@ export const apiClient = {
             if (!res.ok) throw new Error("Failed to update task");
             return res.json();
         } catch (error) {
-            toast.error("Failed to update task ");
             console.log(error);
         }
     },
@@ -59,7 +54,6 @@ export const apiClient = {
             const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
             if (!res.ok) throw new Error("Failed to delete task");
         } catch (error) {
-            toast.error("Failed to delete task");
             console.log(error);
         }
     },
