@@ -52,7 +52,7 @@
       "id": "9",
       "title": "Fix bugs",
       "description": "Resolve reported issues from QA",
-      "column": "review"
+      "column": "done"
     },
     {
       "id": "10",

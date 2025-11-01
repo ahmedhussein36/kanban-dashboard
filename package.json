@@ -7,7 +7,8 @@
     "dev": "next dev ",
     "lint": "eslint .",
     "start": "next start",
-    "json-server": "json-server --watch db.json --port 4000"
+    "json-server": "json-server --watch db.json --port 4000",
+    "start:all": "concurrently \"npm run json-server\" \"npm run dev\""
   },
   "dependencies": {
     "@hello-pangea/dnd": "latest",

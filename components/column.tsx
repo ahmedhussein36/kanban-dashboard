@@ -30,27 +30,27 @@ export function Column({ column, label }: ColumnProps) {
         );
     }, [data, searchTerm]);
 
-    // useEffect(() => {
-    //     const target = observerTarget.current;
-    //     if (!target || !hasNextPage) return;
+    useEffect(() => {
+        const target = observerTarget.current;
+        if (!target || !hasNextPage) return;
 
-    //     const observer = new IntersectionObserver(
-    //         (entries) => {
-    //             const first = entries[0];
-    //             if (
-    //                 first.isIntersecting &&
-    //                 hasNextPage &&
-    //                 !isFetchingNextPage
-    //             ) {
-    //                 fetchNextPage();
-    //             }
-    //         },
-    //         { threshold: 0.2 }
-    //     );
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const first = entries[0];
+                if (
+                    first.isIntersecting &&
+                    hasNextPage &&
+                    !isFetchingNextPage
+                ) {
+                    fetchNextPage();
+                }
+            },
+            { threshold: 0.2 }
+        );
 
-    //     observer.observe(target);
-    //     return () => observer.disconnect();
-    // }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+        observer.observe(target);
+        return () => observer.disconnect();
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     return (
         <div className="flex flex-col min-h-[500px] max-h-[680px] min-w-72">
