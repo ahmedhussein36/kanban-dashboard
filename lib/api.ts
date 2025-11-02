@@ -38,6 +38,7 @@ export const apiClient = {
             return res.json();
         } catch (error) {
             console.error("Error creating task:", error);
+            throw new Error("Failed to create task");
         }
     },
 
@@ -56,6 +57,7 @@ export const apiClient = {
             return updated;
         } catch (error) {
             console.error("Error updating task:", error);
+            throw new Error("Failed to update task");
         }
     },
     async deleteTask(id: number) {
@@ -64,6 +66,7 @@ export const apiClient = {
             if (!res.ok) throw new Error("Failed to delete task");
         } catch (error) {
             console.error("Error deleting task:", error);
+            throw new Error("Failed to delete task");
         }
     },
 };

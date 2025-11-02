@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { queryClient } from "@/lib/query-client";
@@ -25,13 +24,14 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`antialiased max-h-screen overflow-hidden flex flex-col`}>
+            <body
+                className={`antialiased max-h-screen overflow-hidden flex flex-col min-h-screen`}
+            >
                 <Toaster />
                 <QueryClientProvider client={queryClient}>
                     {children}
                 </QueryClientProvider>
                 <Footer />
-                <Analytics />
             </body>
         </html>
     );

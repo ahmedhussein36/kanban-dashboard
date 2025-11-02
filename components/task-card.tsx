@@ -7,6 +7,7 @@ import { Trash2 } from "lucide-react";
 import { useDeleteTask } from "@/hooks/useTasks";
 import { Task } from "@/types/task";
 import { TaskUpdateDialog } from "./task-update-dialog";
+import { DeleteTaskAlert } from "./DeletetaskAlert";
 
 interface TaskCardProps {
     task: Task;
@@ -77,16 +78,23 @@ export function TaskCard({ task, index }: TaskCardProps) {
                             </div>
                             <div className="flex justify-end items-center gap-4 w-full">
                                 <TaskUpdateDialog task={task} />
-                                <Button
-                                    variant="default"
-                                    size="icon-lg"
-                                    aria-label="delete-task"
-                                    title="Delete task"
-                                    onClick={() => deleteTask.mutate(task.id)}
-                                    className="cursor-pointer h-8 w-8 p-0 bg-rose-100 hover:bg-rose-200/70 text-rose-600 hover:text-rose-700"
-                                >
-                                    <Trash2 className="h-3 w-3" />
-                                </Button>
+                                <DeleteTaskAlert
+                                    onDelete={() =>
+                                        deleteTask.mutate(Number(task.id))
+                                    }
+                                    trigger={
+                                        <Button
+                                            variant="default"
+                                            size="icon-lg"
+                                            aria-label="delete-task"
+                                            title="Delete task"
+                                            className="cursor-pointer h-8 w-8 p-0 bg-rose-100 hover:bg-rose-200/70 text-rose-600 hover:text-rose-700"
+                                        >
+                                            <Trash2 className="h-3 w-3" />
+                                        </Button>
+                                    }
+                                />
+                               
                             </div>
                         </div>
                     </Card>

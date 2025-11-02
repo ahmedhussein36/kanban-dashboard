@@ -61,7 +61,7 @@ export function TaskUpdateDialog({ task }: { task: Task }) {
                     size="icon-lg"
                     aria-label="edit-task"
                     title="Edit task"
-                    className=" bg-slate-100 hover:bg-slate-300 text-slate-500 hover:text-slate-700 h-8 w-8 p-0"
+                    className=" cursor-pointer bg-slate-100 hover:bg-slate-300 text-slate-500 hover:text-slate-700 h-8 w-8 p-0"
                 >
                     <Pencil className="h-4 w-4" />
                 </Button>
@@ -116,13 +116,14 @@ export function TaskUpdateDialog({ task }: { task: Task }) {
                         <Button
                             variant="outline"
                             onClick={() => setOpen(false)}
+                            className="cursor-pointer"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleUpdate}
                             disabled={updateTask.isPending}
-                            className=" bg-teal-500 hover:bg-teal-600"
+                            className="cursor-pointer bg-teal-500 hover:bg-teal-600"
                         >
                             {updateTask.isPending
                                 ? "Updating..."

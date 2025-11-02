@@ -45,11 +45,21 @@ export function TaskDialog() {
                         variant: "default",
                         title: "Task created successfully",
                         description: `New task added to  < ${COLUMN_LABELS[column]} > column.`,
+                        className: "bg-green-100 text-green-700",
                     });
                     setTitle("");
                     setDescription("");
                     setColumn("backlog");
                     setOpen(false);
+                },
+                onError: () => {
+                    toast({
+                        variant: "destructive",
+                        title: "Error",
+                        description:
+                            "There was an error creating the task. Please try again.",
+                        className: "bg-red-100 text-red-700",
+                    });
                 },
             }
         );
@@ -60,7 +70,7 @@ export function TaskDialog() {
             <DialogTrigger asChild>
                 <Button
                     variant="default"
-                    className=" bg-teal-500 hover:bg-teal-600"
+                    className=" bg-teal-500 hover:bg-teal-600 cursor-pointer flex items-center"
                 >
                     <Plus className="h-4 w-4 mr-2" />
                     Add Task
@@ -116,13 +126,14 @@ export function TaskDialog() {
                         <Button
                             variant="outline"
                             onClick={() => setOpen(false)}
+                            className="cursor-pointer"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleCreate}
                             disabled={!title.trim() || createTask.isPending}
-                            className=" bg-teal-500 hover:bg-teal-600"
+                            className=" cursor-pointer bg-teal-500 hover:bg-teal-600"
                         >
                             {createTask.isPending ? "Creating..." : "Create"}
                         </Button>

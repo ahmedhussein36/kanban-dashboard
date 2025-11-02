@@ -30,16 +30,28 @@ export function useCreateTask() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
+        onError: (error) => {
+            console.error("Error creating task:", error);
+            throw new Error("Failed to create task");
+        },
     });
 }
 
 export function useUpdateTask() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, data }: { id: number; data: Partial<Task> }) =>
-            apiClient.updateTask(id, data),
+        mutationFn: ({
+            id,
+            data,
+        }: {
+            id: number | string;
+            data: Partial<Task>;
+        }) => apiClient.updateTask(String(id), data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
+        },
+        onError: (error) => {
+            console.error("Error updating task:", error);
         },
     });
 }
@@ -50,6 +62,9 @@ export function useDeleteTask() {
         mutationFn: (id: number) => apiClient.deleteTask(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
+        },
+        onError: (error) => {
+            console.error("Error deleting task:", error);
         },
     });
 }
