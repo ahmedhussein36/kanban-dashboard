@@ -13,12 +13,10 @@ export function useDebounce<T>(
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        // Set loading to true when value changes
         setIsLoading(true);
 
         const timer = setTimeout(() => {
             setDebouncedValue(value);
-            setIsLoading(false); // Set loading to false when debounce completes
         }, delay);
 
         return () => {
