@@ -24,14 +24,14 @@ export const apiClient = {
         }
     },
 
-    async createTask(data: Omit<Task, "id" | "createdAt">) {
+    async createTask(data: Omit<Task, "id">) {
         try {
             const res = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     ...data,
-                    createdAt: new Date().toISOString(),
+                   id: Date.now(),
                 }),
             });
             if (!res.ok) throw new Error("Failed to create task");
@@ -41,6 +41,25 @@ export const apiClient = {
             throw new Error("Failed to create task");
         }
     },
+
+    // async updateTask(
+    //     id: string,
+    //     data: Partial<{ title: string; description: string; column: string }>
+    // ) {
+    //     try {
+    //         const res = await fetch(`${API_URL}/${id}`, {
+    //             method: "PUT",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify(data),
+    //         });
+    //         if (!res.ok) throw new Error("Failed to update task");
+    //         const updated = await res.json();
+    //         return updated;
+    //     } catch (error) {
+    //         console.error("Error updating task:", error);
+    //         throw new Error("Failed to update task");
+    //     }
+    // },
 
     async updateTask(
         id: string,
@@ -52,14 +71,16 @@ export const apiClient = {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
+
             if (!res.ok) throw new Error("Failed to update task");
-            const updated = await res.json();
-            return updated;
+
+            return await res.json();
         } catch (error) {
             console.error("Error updating task:", error);
             throw new Error("Failed to update task");
         }
     },
+
     async deleteTask(id: number) {
         try {
             const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });

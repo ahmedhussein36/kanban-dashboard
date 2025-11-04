@@ -60,6 +60,9 @@ export function TaskDialog() {
                             "There was an error creating the task. Please try again.",
                         className: "bg-red-100 text-red-700",
                     });
+
+                    setColumn("backlog");
+                    setOpen(false);
                 },
             }
         );

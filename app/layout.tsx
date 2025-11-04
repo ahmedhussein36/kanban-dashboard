@@ -3,7 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { queryClient } from "@/lib/query-client";
 import { QueryClientProvider } from "@tanstack/react-query";
-import Footer from "@/components/footer";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
     title: " Kanban To-Do List Dashboard",
@@ -27,8 +27,9 @@ export default function RootLayout({
             <body
                 className={`antialiased max-h-screen overflow-hidden flex flex-col min-h-screen`}
             >
-                <Toaster />
                 <QueryClientProvider client={queryClient}>
+                    <Toaster />
+
                     {children}
                 </QueryClientProvider>
                 <Footer />

@@ -4,8 +4,8 @@ import { useKanbanStore } from "@/store/useKanbanStore";
 import AppLogo from "./AppLogo";
 import { Search, Loader2 } from "lucide-react";
 import { Input } from "./ui/input";
-import { TaskDialog } from "./task-dialog";
 import { useDebounce } from "@/hooks/useDebounce";
+import { TaskDialog } from "./TaskDialog";
 
 const Header = () => {
     const [inputValue, setInputValue] = useState("");

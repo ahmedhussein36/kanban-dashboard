@@ -1,10 +1,8 @@
 "use client";
-import { Board } from "@/components/board";
 import { useKanbanStore } from "@/store/useKanbanStore";
 import Header from "@/components/Header";
-
+import Board from "@/components/Board";
 export default function KanbanPage() {
-    const { searchTerm, setSearchTerm } = useKanbanStore();
 
     return (
         <div className="min-h-full bg-background flex flex-col flex-1 py-6">

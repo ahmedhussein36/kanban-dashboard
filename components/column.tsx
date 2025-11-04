@@ -1,34 +1,34 @@
 "use client";
 
-import { useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { Droppable } from "@hello-pangea/dnd";
-import { TaskCard } from "./task-card";
 import { useTasks } from "@/hooks/useTasks";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useKanbanStore } from "@/store/useKanbanStore";
 import type { TaskColumn } from "@/types/task";
+import { TaskCard } from "./TaskCard";
 
 interface ColumnProps {
     column: TaskColumn;
     label: string;
 }
 
-export function Column({ column, label }: ColumnProps) {
+export const Column = React.memo(({ column, label }: ColumnProps) => {
     const searchTerm = useKanbanStore((state) => state.searchTerm);
     const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
         useTasks(column);
 
     const observerTarget = useRef<HTMLDivElement | null>(null);
 
+    const allTasks = useMemo(() => data?.pages.flat() || [], [data?.pages]);
     const tasks = useMemo(() => {
-        const allTasks = data?.pages.flat() || [];
         if (!searchTerm) return allTasks;
         return allTasks.filter(
             (t) =>
                 t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 t.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [data, searchTerm]);
+    }, [allTasks, searchTerm]);
 
     useEffect(() => {
         const target = observerTarget.current;
@@ -102,4 +102,4 @@ export function Column({ column, label }: ColumnProps) {
             )}
         </div>
     );
-}
+});

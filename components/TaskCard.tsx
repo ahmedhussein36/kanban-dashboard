@@ -6,15 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useDeleteTask } from "@/hooks/useTasks";
 import { Task } from "@/types/task";
-import { TaskUpdateDialog } from "./task-update-dialog";
 import { DeleteTaskAlert } from "./DeletetaskAlert";
+import { TaskUpdateDialog } from "./TaskUpdateDialog";
+import React from "react";
 
 interface TaskCardProps {
     task: Task;
     index: number;
 }
 
-export function TaskCard({ task, index }: TaskCardProps) {
+export const TaskCard = React.memo(({ task, index }: TaskCardProps) => {
     const deleteTask = useDeleteTask();
     const taskStatus = (column: string) => {
         switch (column) {
@@ -102,4 +103,4 @@ export function TaskCard({ task, index }: TaskCardProps) {
             )}
         </Draggable>
     );
-}
+})

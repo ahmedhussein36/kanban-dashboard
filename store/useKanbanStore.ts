@@ -8,7 +8,7 @@ interface KanbanStore {
     dragState: {
         isDragging: boolean;
         sourceColumn?: string;
-    };
+    }; 
     setDragState: (state: {
         isDragging: boolean;
         sourceColumn?: string;

@@ -4,7 +4,7 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
-import type { Task } from "@/types/task";
+import type { Task, TaskColumn } from "@/types/task";
 
 const LIMIT = 10;
 
@@ -39,19 +39,66 @@ export function useCreateTask() {
 
 export function useUpdateTask() {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: ({
             id,
+            oldColumn,
             data,
         }: {
             id: number | string;
+            oldColumn: string;
             data: Partial<Task>;
-        }) => apiClient.updateTask(String(id), data),
-        onSuccess: () => {
+        }) => {
+            let oldTask: null | Task = null;
+            queryClient.setQueryData(
+                ["tasks", oldColumn],
+                (oldData: { pages: any[] }) => {
+                    oldTask = oldData.pages
+                        .flat()
+                        .find(
+                            (task: { id: string }) => task.id === id.toString()
+                        );
+                    const oldDataUpdate = {
+                        ...oldData,
+                        pages: oldData.pages.map((tasks: any[]) =>
+                            tasks.filter(
+                                (task: { id: string }) =>
+                                    task.id !== id.toString()
+                            )
+                        ),
+                    };
+                    // console.log("oldDataUpdate", oldDataUpdate);
+                    return oldDataUpdate;
+                }
+            );
+            queryClient.setQueryData(
+                ["tasks", data.column],
+                (oldData: { pages: any[] }) => {
+                    console.log("oldTask", oldTask);
+                    const newUpdatedData = {
+                        ...oldData,
+                        pages: oldData.pages.map((tasks: any, index: number) =>
+                            index + 1 === oldData.pages.length
+                                ? [
+                                      ...tasks,
+                                      { ...oldTask, column: data.column },
+                                  ]
+                                : tasks
+                        ),
+                    };
+                    return newUpdatedData;
+                }
+            );
+            return Promise.resolve({ id, column: data.column });
+        },
+        onSuccess: async (data) => {
+            await apiClient.updateTask(String(data.id), data);
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
         onError: (error) => {
             console.error("Error updating task:", error);
+            throw new Error("Failed to update task");
         },
     });
 }
@@ -65,6 +112,7 @@ export function useDeleteTask() {
         },
         onError: (error) => {
             console.error("Error deleting task:", error);
+            throw new Error("Failed to delete task");
         },
     });
 }

@@ -21,3 +21,13 @@ export const COLUMN_LABELS: Record<TaskColumn, string> = {
     review: "Review",
     done: "Done",
 };
+
+export interface UpdateTaskVariables {
+    id: number | string;
+    oldColumn: string;
+    data: Partial<Task>;
+}
+
+export interface TaskCache {
+    pages: Task[][];
+}
