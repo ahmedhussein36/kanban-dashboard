@@ -92,10 +92,10 @@ export function useUpdateTask() {
             );
             return Promise.resolve({ id, column: data.column });
         },
-        onSuccess: async (data) => {
-            await apiClient.updateTask(String(data.id), data);
-            queryClient.invalidateQueries({ queryKey: ["tasks"] });
-        },
+        // onSuccess: async (data) => {
+        //     await apiClient.updateTask(String(data.id), data);
+        //     queryClient.invalidateQueries({ queryKey: ["tasks"] });
+        // },
         onError: (error) => {
             console.error("Error updating task:", error);
             throw new Error("Failed to update task");
