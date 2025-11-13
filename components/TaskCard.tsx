@@ -45,7 +45,7 @@ export const TaskCard = React.memo(({ task, index }: TaskCardProps) => {
     };
 
     return (
-        <Draggable draggableId={`task-${task.id}`} index={index}>
+        <Draggable draggableId={task.id.toString()} index={index}>
             {(provided, snapshot) => (
                 <div
                     ref={provided.innerRef}
@@ -95,7 +95,6 @@ export const TaskCard = React.memo(({ task, index }: TaskCardProps) => {
                                         </Button>
                                     }
                                 />
-                               
                             </div>
                         </div>
                     </Card>
@@ -103,4 +102,4 @@ export const TaskCard = React.memo(({ task, index }: TaskCardProps) => {
             )}
         </Draggable>
     );
-})
+});

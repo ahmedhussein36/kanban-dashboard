@@ -20,7 +20,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Pencil } from "lucide-react";
-// import { useUpdateTask } from "@/hooks/useTasks";
 import { COLUMNS, COLUMN_LABELS } from "@/types/task";
 import type { Task, TaskColumn } from "@/types/task";
 import { useToast } from "@/hooks/use-toast";
@@ -38,14 +37,18 @@ export function TaskUpdateDialog({ task }: { task: Task }) {
     const handleUpdate = async () => {
         if (!title.trim()) return;
 
-        updateTask.mutate(
-            { id: task.id, data: { title, description, column } },
+        updateTask.mutateAsync(
+            {
+                id: task.id,
+                data: { title, description, column },
+                column: task.column,
+            },
             {
                 onSuccess: () => {
                     toast({
                         variant: "default",
-                        title: "Task updated successfully",
-                        description: `Task moved to < ${COLUMN_LABELS[column]} > column.`,
+                        title: "Task updated",
+                        description: `Task has been updated successfully.`,
                     });
                     setOpen(false);
                 },

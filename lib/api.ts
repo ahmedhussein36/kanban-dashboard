@@ -1,7 +1,9 @@
-import { Task } from "@/types/task";
+import { Task, TaskColumn } from "@/types/task";
+import axios from "axios";
 
 const API_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/tasks";
+    // process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:4000/tasks";
 
 export const apiClient = {
     async getTasks(column?: string, page = 1, limit = 10) {
@@ -12,11 +14,11 @@ export const apiClient = {
             params.append("page", String(page));
             params.append("limit", String(limit));
 
-            const response = await fetch(`${API_URL}?${params.toString()}`);
+            const response = await axios.get(`${API_URL}?${params.toString()}`);
 
-            if (!response.ok) throw new Error("Failed to fetch tasks");
+            if (!response) throw new Error("Failed to fetch tasks");
 
-            const tasks = await response.json();
+            const tasks = await response.data;
             return tasks;
         } catch (error) {
             console.error("Error fetching tasks:", error);
@@ -26,55 +28,29 @@ export const apiClient = {
 
     async createTask(data: Omit<Task, "id">) {
         try {
-            const res = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    ...data,
-                   id: Date.now(),
-                }),
-            });
-            if (!res.ok) throw new Error("Failed to create task");
-            return res.json();
+            const res = await axios.post(API_URL, { ...data, id: Date.now() });
+            if (!res) throw new Error("Failed to create task");
+            return res.data;
         } catch (error) {
             console.error("Error creating task:", error);
             throw new Error("Failed to create task");
         }
     },
 
-    // async updateTask(
-    //     id: string,
-    //     data: Partial<{ title: string; description: string; column: string }>
-    // ) {
-    //     try {
-    //         const res = await fetch(`${API_URL}/${id}`, {
-    //             method: "PUT",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify(data),
-    //         });
-    //         if (!res.ok) throw new Error("Failed to update task");
-    //         const updated = await res.json();
-    //         return updated;
-    //     } catch (error) {
-    //         console.error("Error updating task:", error);
-    //         throw new Error("Failed to update task");
-    //     }
-    // },
-
     async updateTask(
-        id: string,
-        data: Partial<{ title: string; description: string; column: string }>
+        id: number,
+        data: Partial<{
+            title: string;
+            description: string;
+            column: TaskColumn;
+        }>
     ) {
         try {
-            const res = await fetch(`${API_URL}/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
+            const res = await axios.patch(`${API_URL}/${id}`, { ...data });
 
-            if (!res.ok) throw new Error("Failed to update task");
+            if (!res) throw new Error("Failed to update task");
 
-            return await res.json();
+            return await res.data;
         } catch (error) {
             console.error("Error updating task:", error);
             throw new Error("Failed to update task");
@@ -83,8 +59,8 @@ export const apiClient = {
 
     async deleteTask(id: number) {
         try {
-            const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-            if (!res.ok) throw new Error("Failed to delete task");
+            const res = await axios.delete(`${API_URL}/${id}`, {});
+            if (!res) throw new Error("Failed to delete task");
         } catch (error) {
             console.error("Error deleting task:", error);
             throw new Error("Failed to delete task");
@@ -97,5 +73,5 @@ export const createTask = apiClient.createTask;
 export const updateTaskStatus = (
     id: number,
     status: "backlog" | "in-progress" | "review" | "done"
-) => apiClient.updateTask(id.toString(), { column: status });
+) => apiClient.updateTask(id, { column: status });
 export const deleteTask = apiClient.deleteTask;

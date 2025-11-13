@@ -8,7 +8,7 @@ import type { Task, TaskColumn } from "@/types/task";
 
 const LIMIT = 10;
 
-export function useTasks(column: string) {
+export function useTasks(column?: string) {
     return useInfiniteQuery({
         queryKey: ["tasks", column],
         queryFn: ({ pageParam = 1 }) =>
@@ -37,68 +37,59 @@ export function useCreateTask() {
     });
 }
 
+/* 
+I Used optimistic update here to instantly reflect task changes 
+in the UI without waiting for the server response, making the 
+drag-and-drop feel smoother and more responsive.
+*/
+
 export function useUpdateTask() {
     const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: ({
             id,
-            oldColumn,
             data,
+            column,
         }: {
-            id: number | string;
-            oldColumn: string;
+            id: number;
             data: Partial<Task>;
-        }) => {
-            let oldTask: null | Task = null;
-            queryClient.setQueryData(
-                ["tasks", oldColumn],
-                (oldData: { pages: any[] }) => {
-                    oldTask = oldData.pages
-                        .flat()
-                        .find(
-                            (task: { id: string }) => task.id === id.toString()
-                        );
-                    const oldDataUpdate = {
-                        ...oldData,
-                        pages: oldData.pages.map((tasks: any[]) =>
-                            tasks.filter(
-                                (task: { id: string }) =>
-                                    task.id !== id.toString()
+            column: TaskColumn;
+        }) => apiClient.updateTask(id, { ...data, column }),
+
+        onMutate: async ({ id, data, column }) => {
+            await queryClient.cancelQueries({ queryKey: ["tasks", column] });
+            const previousTasks = queryClient.getQueryData<Task[]>([
+                "tasks",
+                column,
+            ]);
+
+            queryClient.setQueriesData(
+                { queryKey: ["tasks", column] },
+                (old: any) => {
+                    if (!old) return old;
+                    return {
+                        ...old,
+                        pages: old.pages.map((page: any[]) =>
+                            page.map((task) =>
+                                task.id === id ? { ...task, ...data } : task
                             )
                         ),
                     };
-                    // console.log("oldDataUpdate", oldDataUpdate);
-                    return oldDataUpdate;
                 }
             );
-            queryClient.setQueryData(
-                ["tasks", data.column],
-                (oldData: { pages: any[] }) => {
-                    console.log("oldTask", oldTask);
-                    const newUpdatedData = {
-                        ...oldData,
-                        pages: oldData.pages.map((tasks: any, index: number) =>
-                            index + 1 === oldData.pages.length
-                                ? [
-                                      ...tasks,
-                                      { ...oldTask, column: data.column },
-                                  ]
-                                : tasks
-                        ),
-                    };
-                    return newUpdatedData;
-                }
-            );
-            return Promise.resolve({ id, column: data.column });
+
+            return { previousTasks };
         },
-        onSuccess: async (data) => {
-            await apiClient.updateTask(String(data.id), data);
-            queryClient.invalidateQueries({ queryKey: ["tasks"] });
-        },
-        onError: (error) => {
+
+        onError: (error, _, context) => {
             console.error("Error updating task:", error);
-            throw new Error("Failed to update task");
+            if (context?.previousTasks) {
+                queryClient.setQueryData(["tasks"], context.previousTasks);
+            }
+        },
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
     });
 }

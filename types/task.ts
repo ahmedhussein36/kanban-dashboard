@@ -1,5 +1,5 @@
 export interface Task {
-    id: number | string;
+    id: number;
     title: string;
     description: string;
     column: "backlog" | "in-progress" | "review" | "done";

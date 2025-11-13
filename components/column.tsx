@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useMemo } from "react";
-import { Droppable } from "@hello-pangea/dnd";
 import { useTasks } from "@/hooks/useTasks";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useKanbanStore } from "@/store/useKanbanStore";
 import type { TaskColumn } from "@/types/task";
 import { TaskCard } from "./TaskCard";
+import SkeletonTasks from "./SkeletonTasks";
+import EmptyState from "./ui/EmptyState";
+import { StrictModeDroppable as Droppable } from "@/helper/StrictModeDroppable";
 
 interface ColumnProps {
     column: TaskColumn;
@@ -53,7 +54,7 @@ export const Column = React.memo(({ column, label }: ColumnProps) => {
     }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     return (
-        <div className="flex flex-col min-h-[500px] max-h-[680px] min-w-72">
+        <div className="flex max-h-full flex-col min-h-[400px] min-w-[200px]">
             <div className="mb-4 bg-muted rounded-lg p-3 flex items-center justify-between">
                 <h2 className="font-semibold text-lg">{label}</h2>
                 <span className="text-sm text-center text-white bg-teal-500 w-6 h-6 rounded-full flex items-center justify-center">
@@ -62,31 +63,33 @@ export const Column = React.memo(({ column, label }: ColumnProps) => {
             </div>
 
             <Droppable droppableId={column}>
-                {(provided, snapshot) => (
+                {(provided: any, snapshot: any) => (
                     <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className={`flex-1 rounded-lg p-3 transition-colors overflow-y-auto overflow-x-hidden ${
+                        className={`rounded-lg p-3  relative overflow-y-auto overflow-x-hidden ${
                             snapshot.isDraggingOver
-                                ? "bg-primary/5 border border-primary/10"
+                                ? "border-3 border-dashed border-purple-400 bg-purple-50"
                                 : "bg-muted/50"
                         }`}
                     >
                         {isLoading ? (
                             <div className="space-y-3">
-                                {Array.from({ length: 4 }).map((_, i) => (
-                                    <Skeleton key={i} className="h-32 w-full" />
-                                ))}
+                                <SkeletonTasks />
                             </div>
                         ) : (
                             <>
-                                {tasks.map((task, index) => (
-                                    <TaskCard
-                                        key={task.id}
-                                        index={index}
-                                        task={task}
-                                    />
-                                ))}
+                                {allTasks.length ? (
+                                    allTasks.map((task, index) => (
+                                        <TaskCard
+                                            key={task.id}
+                                            index={index}
+                                            task={task}
+                                        />
+                                    ))
+                                ) : (
+                                    <EmptyState label={"No Tasks Added"} />
+                                )}
                                 {provided.placeholder}
                                 <div ref={observerTarget} className="h-6" />
                             </>

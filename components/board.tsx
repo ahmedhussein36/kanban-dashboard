@@ -1,16 +1,11 @@
+"use client";
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import { Column } from "./Column";
-import { COLUMNS, COLUMN_LABELS, Task } from "@/types/task";
+import { COLUMNS, COLUMN_LABELS, TaskColumn } from "@/types/task";
 import { useUpdateTask } from "@/hooks/useTasks";
-import { queryClient } from "@/lib/query-client";
-import { useState } from "react";
 
 export default function Board() {
     const updateTask = useUpdateTask();
-
-    const handleDragStart = () => {
-        // Optional: Add any logic needed when dragging starts
-    };
 
     const handleDragEnd = (result: DropResult) => {
         const { destination, source, draggableId } = result;
@@ -23,27 +18,20 @@ export default function Board() {
         ) {
             return;
         }
-        // console.log(source);
-        const taskId = Number.parseInt(draggableId.split("-")[1], 10);
-        const newColumn = destination.droppableId as
-            | "backlog"
-            | "in-progress"
-            | "review"
-            | "done";
 
-        updateTask.mutate({
+        const taskId = parseInt(draggableId);
+        const newColumn = destination.droppableId as TaskColumn;
+
+        updateTask.mutateAsync({
             id: taskId,
-            oldColumn: source.droppableId,
             data: { column: newColumn },
+            column: newColumn,
         });
     };
 
     return (
-        <DragDropContext
-            onDragEnd={handleDragEnd}
-            onDragStart={handleDragStart}
-        >
-            <div className="grid grid-cols-4 gap-4">
+        <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="grid grid-cols-4 gap-4  min-w-[800px] ">
                 {COLUMNS.map((column) => (
                     <Column
                         key={column}
