@@ -81,14 +81,17 @@ export function useUpdateTask() {
             return { previousTasks };
         },
 
-        onError: (error, _, context) => {
+        onError: (error, variables, context) => {
             console.error("Error updating task:", error);
             if (context?.previousTasks) {
-                queryClient.setQueryData(["tasks"], context.previousTasks);
+                queryClient.setQueryData(
+                    ["tasks", variables.column],
+                    context.previousTasks
+                );
             }
         },
 
-        onSuccess: () => {
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
     });
