@@ -25,7 +25,7 @@ import { COLUMNS, COLUMN_LABELS } from "@/types/task";
 import type { TaskColumn } from "@/types/task";
 import { useToast } from "@/hooks/use-toast";
 
-export function TaskDialog() {
+export function AddTaskDialog() {
     const [open, setOpen] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -44,7 +44,7 @@ export function TaskDialog() {
                     toast({
                         variant: "default",
                         title: "Task created successfully",
-                        description: `New task added to  < ${COLUMN_LABELS[column]} > column.`,
+                        description: `New task added to  ${COLUMN_LABELS[column]}.`,
                         className: "bg-green-100 text-green-700",
                     });
                     setTitle("");

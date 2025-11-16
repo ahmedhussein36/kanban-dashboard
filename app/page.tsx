@@ -1,15 +1,21 @@
 "use client";
-import { useKanbanStore } from "@/store/useKanbanStore";
 import Header from "@/components/Header";
 import Board from "@/components/Board";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import KanbanBoard from "@/components/board/KanbanBoard";
 export default function KanbanPage() {
-
+    const queryClient = new QueryClient();
     return (
-        <div className="min-h-full bg-background flex flex-col flex-1 py-6">
-            <Header />
-            <main className="max-w-7xl mx-auto px-6 py-8">
-                <Board />
-            </main>
-        </div>
+        <QueryClientProvider client={queryClient}>
+            <div className="p-3 max-w-[1440px] mx-auto">
+                <Header />
+                <main className=" mx-auto p-4">
+                    <KanbanBoard />
+                </main>
+            </div>
+
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
     );
 }

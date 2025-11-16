@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 
-interface DebounceResult<T> {
-    debouncedValue: T;
+interface DebounceResult {
+    debouncedValue: string;
     isLoading: boolean;
 }
 
-export function useDebounce<T>(
-    value: T,
+export function useDebounce(
+    value: string,
     delay: number = 500
-): DebounceResult<T> {
-    const [debouncedValue, setDebouncedValue] = useState<T>(value);
+): DebounceResult {
+    const [debouncedValue, setDebouncedValue] = useState<string>(value);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        setIsLoading(true);
+        if (value!== "") setIsLoading(true);
 
         const timer = setTimeout(() => {
             setDebouncedValue(value);
@@ -21,6 +21,7 @@ export function useDebounce<T>(
 
         return () => {
             clearTimeout(timer);
+            setIsLoading(false);
         };
     }, [value, delay]);
 

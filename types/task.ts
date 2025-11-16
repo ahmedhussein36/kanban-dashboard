@@ -1,8 +1,8 @@
 export interface Task {
-    id: number | string;
+    id: number;
     title: string;
     description: string;
-    column: "backlog" | "in-progress" | "review" | "done";
+    column: "backlog" | "inprogress" | "review" | "done";
     order?: number;
 }
 
@@ -10,14 +10,14 @@ export type TaskColumn = Task["column"];
 
 export const COLUMNS: TaskColumn[] = [
     "backlog",
-    "in-progress",
+    "inprogress",
     "review",
     "done",
 ];
 
 export const COLUMN_LABELS: Record<TaskColumn, string> = {
     backlog: "Backlog",
-    "in-progress": "In Progress",
+    inprogress: "In Progress",
     review: "Review",
     done: "Done",
 };

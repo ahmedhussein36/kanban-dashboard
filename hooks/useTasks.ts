@@ -5,19 +5,27 @@ import {
 } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import type { Task, TaskColumn } from "@/types/task";
+import { useKanbanStore } from "@/store/useKanbanStore";
 
 const LIMIT = 10;
 
-export function useTasks(column: string) {
+// get tasks from API --------------------------------------
+
+export function useTasks(column?: string) {
+    const searchTerm = useKanbanStore((s) => s.searchTerm);
+
     return useInfiniteQuery({
         queryKey: ["tasks", column],
         queryFn: ({ pageParam = 1 }) =>
-            apiClient.getTasks(column, pageParam, LIMIT),
+            apiClient.getTasks(searchTerm, pageParam, LIMIT),
         getNextPageParam: (lastPage, allPages) =>
             lastPage.length === LIMIT ? allPages.length + 1 : undefined,
         initialPageParam: 1,
     });
 }
+// End of get tasks from API ------------------------------
+
+// Create Task Mutation -----------------------------------
 
 export function useCreateTask() {
     const queryClient = useQueryClient();
@@ -25,8 +33,8 @@ export function useCreateTask() {
         mutationFn: (data: {
             title: string;
             description: string;
-            column: "backlog" | "in-progress" | "review" | "done";
-        }) => apiClient.createTask(data),
+            column: "backlog" | "inprogress" | "review" | "done";
+        }) => apiClient.createTask({...data}),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
@@ -36,6 +44,15 @@ export function useCreateTask() {
         },
     });
 }
+// End of Create Task mutation ----------------------------
+
+/* 
+I Used optimistic update here to instantly reflect task changes 
+in the UI without waiting for the server response, making the 
+drag-and-drop feel smoother and more responsive.
+*/
+
+// Update Task Mutation -----------------------------------
 
 export function useUpdateTask() {
     const queryClient = useQueryClient();
@@ -43,66 +60,55 @@ export function useUpdateTask() {
     return useMutation({
         mutationFn: ({
             id,
-            oldColumn,
             data,
+            column,
         }: {
-            id: number | string;
-            oldColumn: string;
+            id: number;
             data: Partial<Task>;
-        }) => {
-            let oldTask: null | Task = null;
-            queryClient.setQueryData(
-                ["tasks", oldColumn],
-                (oldData: { pages: any[] }) => {
-                    oldTask = oldData.pages
-                        .flat()
-                        .find(
-                            (task: { id: string }) => task.id === id.toString()
-                        );
-                    const oldDataUpdate = {
-                        ...oldData,
-                        pages: oldData.pages.map((tasks: any[]) =>
-                            tasks.filter(
-                                (task: { id: string }) =>
-                                    task.id !== id.toString()
-                            )
-                        ),
-                    };
-                    // console.log("oldDataUpdate", oldDataUpdate);
-                    return oldDataUpdate;
-                }
-            );
-            queryClient.setQueryData(
-                ["tasks", data.column],
-                (oldData: { pages: any[] }) => {
-                    console.log("oldTask", oldTask);
-                    const newUpdatedData = {
-                        ...oldData,
-                        pages: oldData.pages.map((tasks: any, index: number) =>
-                            index + 1 === oldData.pages.length
-                                ? [
-                                      ...tasks,
-                                      { ...oldTask, column: data.column },
-                                  ]
-                                : tasks
-                        ),
-                    };
-                    return newUpdatedData;
-                }
-            );
-            return Promise.resolve({ id, column: data.column });
+            column: TaskColumn;
+        }) => apiClient.updateTask(id, { ...data, column }),
+
+        onMutate: async ({ id, data, column }) => {
+            const previous = queryClient.getQueriesData({
+                queryKey: ["tasks"],
+            });
+
+            await queryClient.cancelQueries({ queryKey: ["tasks"] });
+
+            queryClient.setQueriesData({ queryKey: ["tasks"] }, (old: any) => {
+                if (!old) return old;
+
+                return {
+                    ...old,
+                    pages: old.pages.map((page: Task[]) =>
+                        page.map((task) =>
+                            task.id === id ? { ...task, ...data, column } : task
+                        )
+                    ),
+                };
+            });
+
+            return { previous };
         },
-        onSuccess: async (data) => {
-            await apiClient.updateTask(String(data.id), data);
+
+        onError: (error, _, context) => {
+            console.error("Update error:", error);
+
+            if (context?.previous) {
+                for (const [key, data] of context.previous) {
+                    queryClient.setQueryData(key, data);
+                }
+            }
+        },
+
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
-        },
-        onError: (error) => {
-            console.error("Error updating task:", error);
-            throw new Error("Failed to update task");
         },
     });
 }
+// End of Update Task mutation----------------------------
 
+// Delete Task -----------------------------------
 export function useDeleteTask() {
     const queryClient = useQueryClient();
     return useMutation({
@@ -116,3 +122,4 @@ export function useDeleteTask() {
         },
     });
 }
+// End of Delete Task -----------------------------------

@@ -4,43 +4,43 @@
       "id": 1,
       "title": "Design login page",
       "description": "Create a mockup for the new login page",
-      "column": "done"
+      "column": "backlog"
     },
     {
       "id": 2,
       "title": "Draft user survey",
       "description": "Prepare questions for the user feedback surey",
-      "column": "review"
+      "column": "in-progress"
     },
     {
       "id": 3,
       "title": "Implement authentication",
       "description": "Add OAuth 2 support for user logins",
-      "column": "backlog"
+      "column": "review"
     },
     {
       "id": 4,
       "title": "Update dependencies",
       "description": "Upgrade project to use latest libraries",
-      "column": "inprogress"
+      "column": "done"
     },
     {
       "id": 5,
       "title": "Code cleanup",
       "description": "Refactor code to improve readability",
-      "column": "backlog"
+      "column": "done"
     },
     {
       "id": 6,
       "title": "Write documentation",
       "description": "Document the API endpoints and usage",
-      "column": "inprogress"
+      "column": "in-progress"
     },
     {
       "id": 7,
       "title": "Fix login bugs",
       "description": "Resolve the issue with login errors",
-      "column": "review"
+      "column": "backlog"
     }
   ]
 }

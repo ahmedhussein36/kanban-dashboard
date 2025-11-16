@@ -11,21 +11,26 @@ import {
     AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { Trash2 } from "lucide-react";
+import { Button } from "./ui/button";
 
 type DeleteTaskAlertProps = {
     onDelete: () => void;
-    trigger: React.ReactNode;
-    taskName?: string;
 };
 
-export function DeleteTaskAlert({
-    onDelete,
-    trigger,
-    taskName,
-}: DeleteTaskAlertProps) {
+export function DeleteTaskAlert({ onDelete }: DeleteTaskAlertProps) {
     return (
         <AlertDialog>
-            <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+            <AlertDialogTrigger asChild>
+                <Button
+                    variant="default"
+                    size="icon-lg"
+                    aria-label="delete-task"
+                    title="Delete task"
+                    className="cursor-pointer h-8 w-8 p-0 bg-rose-100 hover:bg-rose-200/70 text-rose-600 hover:text-rose-700"
+                >
+                    <Trash2 className="h-3 w-3" />
+                </Button>
+            </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>
@@ -33,9 +38,8 @@ export function DeleteTaskAlert({
                         Delete Task
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                        {`Are you sure you want to delete${
-                            taskName ? ` "${taskName}"` : ""
-                        }? This action cannot be undone.`}
+                        Are you sure you want to delete this task? This
+                        actioncannot be undone.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
