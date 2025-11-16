@@ -10,12 +10,45 @@
       "id": 2,
       "title": "Draft user survey",
       "description": "Prepare questions for the user feedback surey",
+<<<<<<< HEAD
       "column": "review"
     },
     {
       "id": 3,
       "title": "Implement authentication",
       "description": "Add OAuth 2 support for user logins",
+=======
+      "column": "backlog"
+    },
+    {
+      "id": 3,
+      "title": "Implement authentication",
+      "description": "Add OAuth 2 support for user logins",
+      "column": "review"
+    },
+    {
+      "id": 4,
+      "title": "Update dependencies",
+      "description": "Upgrade project to use latest libraries",
+      "column": "review"
+    },
+    {
+      "id": 5,
+      "title": "Code cleanup",
+      "description": "Refactor code to improve readability",
+      "column": "in-progress"
+    },
+    {
+      "id": 6,
+      "title": "Write documentation",
+      "description": "Document the API endpoints and usage",
+      "column": "in-progress"
+    },
+    {
+      "id": 7,
+      "title": "Fix login bugs",
+      "description": "Resolve the issue with login errors",
+>>>>>>> 1f5e3790332653deba81058bb7a045bab292133f
       "column": "backlog"
     },
     {

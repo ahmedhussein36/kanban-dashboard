@@ -11,7 +11,11 @@ const SearchBox = () => {
     const { debouncedValue, isLoading } = useDebounce(inputValue, 500);
 
     useEffect(() => {
+<<<<<<< HEAD
         setSearchTerm(debouncedValue);
+=======
+        setSearchTerm(inputValue);
+>>>>>>> 1f5e3790332653deba81058bb7a045bab292133f
         setIsSearching(isLoading);
 
         return;
